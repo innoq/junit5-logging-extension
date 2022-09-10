@@ -18,10 +18,22 @@
     </license>
   </licenses>
 
+  <organization>
+    <name>innoQ Deutschland GmbH</name>
+    <url>https://innoq.com</url>
+  </organization>
+
+  <inceptionYear>2022</inceptionYear>
+
   <ciManagement>
     <url>https://github.com/innoq/junit5-logging-extension/actions</url>
     <system>GitHub Actions</system>
   </ciManagement>
+
+  <issueManagement>
+    <url>https://github.com/innoq/junit5-logging-extension/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
 
   <developers>
     <developer>
