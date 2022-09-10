@@ -18,6 +18,11 @@
     </license>
   </licenses>
 
+  <ciManagement>
+    <url>https://github.com/innoq/junit5-logging-extension/actions</url>
+    <system>GitHub Actions</system>
+  </ciManagement>
+
   <developers>
     <developer>
       <id>mvitz</id>
