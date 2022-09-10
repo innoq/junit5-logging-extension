@@ -38,6 +38,8 @@ testImplementation("com.innoq:junit5-logging-extension:0.1.0")
 
 Use the extension within your JUnit 5 tests:
 
+### Usage
+
 ```java
 @Logging
 class SomeTest {
