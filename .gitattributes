@@ -6,3 +6,21 @@
 # These files are text and should be normalized
 # (Convert crlf => lf)
 *.md text
+*.properties text
+*.xml text
+
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.class binary
+*.jar binary
+
+
+# Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+
+# Unix/Linux
+*.sh text eol=lf
+mvnw text eol=lf

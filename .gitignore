@@ -1,2 +1,15 @@
+# Maven
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ
+*.iml
+.idea/
+
+# SDKMAN
+.sdkmanrc
+
 # Mac
 .DS_Store
