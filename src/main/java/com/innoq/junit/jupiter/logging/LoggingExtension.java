@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -57,12 +58,18 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Afte
             return new LoggingEvents(appender);
         }
 
-        final String[] value = eventsFor.value();
-        if (value == null || value.length == 0) {
-            return new LoggingEvents(appender);
+        final Predicate<ILoggingEvent> filter = filterFor(eventsFor);
+        return new LoggingEvents(appender, filter);
+    }
+
+    private static Predicate<ILoggingEvent> filterFor(EventsFor eventsFor) {
+        final Set<String> loggersToCapture = new HashSet<>(Arrays.asList(eventsFor.value()));
+        Arrays.stream(eventsFor.clazz()).map(Class::getName).forEach(loggersToCapture::add);
+
+        if (loggersToCapture.isEmpty()) {
+            return loggingEvent -> true;
         }
 
-        final Set<String> loggers = new HashSet<>(Arrays.asList(value));
-        return new LoggingEvents(appender, event -> loggers.contains(event.getLoggerName()));
+        return loggingEvent -> loggersToCapture.contains(loggingEvent.getLoggerName());
     }
 }
