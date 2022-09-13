@@ -12,6 +12,10 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public final class LoggingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
@@ -54,6 +58,7 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Afte
             return new LoggingEvents(appender);
         }
 
-        return new LoggingEvents(appender, event -> event.getLoggerName().equals(eventsFor.value()));
+        final Set<String> loggers = new HashSet<>(Arrays.asList(eventsFor.value()));
+        return new LoggingEvents(appender, event -> loggers.contains(event.getLoggerName()));
     }
 }
