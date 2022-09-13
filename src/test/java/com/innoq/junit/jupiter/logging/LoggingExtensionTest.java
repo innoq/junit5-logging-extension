@@ -10,8 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Logging
 class LoggingExtensionTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LoggingExtensionTest.class);
-    private static final Logger LOG2 = LoggerFactory.getLogger("LoggingExtensionTest.Log2");
+    static final Logger LOG = LoggerFactory.getLogger(LoggingExtensionTest.class);
+    static final Logger LOG2 = LoggerFactory.getLogger("LoggingExtensionTest.Log2");
 
     @Test
     void events_shouldBeEmpty_whenNothingWasLogged(LoggingEvents events) {
