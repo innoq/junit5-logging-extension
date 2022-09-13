@@ -15,6 +15,20 @@ class EventsForTest {
     static final Logger LOG3 = LoggerFactory.getLogger("EventsForTest.Log3");
 
     @Test
+    void events_shouldContainAllLogEvents_whenNoLoggerIsSpecified(@EventsFor LoggingEvents events) {
+        LOG.info("Log message");
+        LOG2.info("Log2 message");
+        LOG3.info("Log3 message");
+
+        assertThat(events.all())
+            .extracting(ILoggingEvent::getMessage)
+            .containsExactly(
+                "Log message",
+                "Log2 message",
+                "Log3 message");
+    }
+
+    @Test
     void events_shouldContainOnlyLogEventsForSingleSpecifiedLogger(@EventsFor("com.innoq.junit.jupiter.logging.EventsForTest") LoggingEvents events) {
         LOG.info("Log message");
         LOG2.info("Log2 message");

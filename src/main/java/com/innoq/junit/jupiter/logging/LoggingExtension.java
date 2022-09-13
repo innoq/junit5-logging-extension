@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.slf4j.LoggerFactory;
 
@@ -47,18 +46,23 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Afte
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         return parameterContext.getParameter().getType().isAssignableFrom(LoggingEvents.class);
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         final EventsFor eventsFor = parameterContext.getParameter().getAnnotation(EventsFor.class);
         if (eventsFor == null) {
             return new LoggingEvents(appender);
         }
 
-        final Set<String> loggers = new HashSet<>(Arrays.asList(eventsFor.value()));
+        final String[] value = eventsFor.value();
+        if (value == null || value.length == 0) {
+            return new LoggingEvents(appender);
+        }
+
+        final Set<String> loggers = new HashSet<>(Arrays.asList(value));
         return new LoggingEvents(appender, event -> loggers.contains(event.getLoggerName()));
     }
 }
