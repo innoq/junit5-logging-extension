@@ -30,7 +30,7 @@ Add junit5-logging-extension as dependency within test scope to your project.
 testImplementation 'com.innoq:junit5-logging-extension:0.1.0'
 ```
 
-### Gradle Groovy DSL
+### Gradle Kotlin DSL
 
 ```
 testImplementation("com.innoq:junit5-logging-extension:0.1.0")
