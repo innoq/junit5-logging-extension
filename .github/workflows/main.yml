@@ -5,7 +5,7 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Compile, test and package library
+    name: Compile, test and package modules
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -17,5 +17,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Compile, test, and package library
-        run: ./mvnw --batch-mode --errors --no-transfer-progress --show-version verify
+      - name: Compile, test, and package modules
+        run: ./bin/cibuild

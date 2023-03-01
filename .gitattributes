@@ -25,4 +25,5 @@
 
 # Unix/Linux
 *.sh text eol=lf
+bin/cibuild text eol=lf
 mvnw text eol=lf

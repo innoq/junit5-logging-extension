@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+#Compile, test, and package modules
+#
+#Usage:
+#  $ ./bin/cibuild
+
+set -euo pipefail
+IFS=$'\n\t'
+
+MAVEN_OPTS="-Dorg.slf4j.simpleLogger.showDateTime=true"
+MAVEN_OPTS="-Djava.awt.headless=true ${MAVEN_OPTS}"
+export MAVEN_OPTS
+
+./mvnw \
+    --batch-mode \
+    --errors \
+    --fail-at-end \
+    --no-transfer-progress \
+    --show-version \
+    verify
