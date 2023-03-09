@@ -219,7 +219,6 @@
             <version>1.6.13</version>
             <extensions>true</extensions>
             <configuration>
-              <autoReleaseAfterClose>false</autoReleaseAfterClose>
               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
               <serverId>ossrh</serverId>
             </configuration>
