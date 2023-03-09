@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public final class LoggingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
@@ -49,12 +50,10 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Afte
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        final EventsFor eventsFor = parameterContext.getParameter().getAnnotation(EventsFor.class);
-        if (eventsFor == null) {
-            return new LoggingEvents(appender);
-        }
-
-        final Predicate<ILoggingEvent> filter = filterFor(eventsFor);
+        final Predicate<ILoggingEvent> filter = findRepeatableAnnotations(parameterContext.getParameter(), EventsFor.class)
+            .stream()
+            .map(LoggingExtension::filterFor)
+            .reduce(LoggingEvents.NO_EVENT, Predicate::or);
         return new LoggingEvents(appender, filter);
     }
 

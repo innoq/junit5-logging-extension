@@ -110,4 +110,18 @@ class EventsForTest {
                 "Log2 message",
                 "Log3 message");
     }
+
+    @Test
+    void events_shouldContainOnlyMatchingLogEvents_whenAnnotationIsRepeated(@EventsFor(clazz = EventsForTest.class) @EventsFor(clazz = EventsFor.class) LoggingEvents events) {
+        LOG.info("Log message");
+        LOG2.info("Log2 message");
+        LOG3.info("Log3 message");
+        LOG4.info("Log4 message");
+
+        assertThat(events.all())
+            .extracting(ILoggingEvent::getMessage)
+            .containsExactly(
+                "Log message",
+                "Log4 message");
+    }
 }

@@ -12,11 +12,14 @@ import static java.util.stream.Collectors.toList;
 
 public final class LoggingEvents {
 
+    static final Predicate<ILoggingEvent> EVERY_EVENT = event -> true;
+    static final Predicate<ILoggingEvent> NO_EVENT = event -> false;
+
     private final ListAppender<ILoggingEvent> appender;
     private final Predicate<ILoggingEvent> filter;
 
     LoggingEvents(ListAppender<ILoggingEvent> appender) {
-        this(appender, event -> true);
+        this(appender, EVERY_EVENT);
     }
 
     LoggingEvents(ListAppender<ILoggingEvent> appender, Predicate<ILoggingEvent> filter) {

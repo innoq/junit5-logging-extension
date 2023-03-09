@@ -1,6 +1,5 @@
 package com.innoq.junit.jupiter.logging;
 
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -9,9 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target(PARAMETER)
 @Retention(RUNTIME)
-@Repeatable(EventsFilteredBy.class)
-public @interface EventsFor {
+public @interface EventsFilteredBy {
 
-    String[] value() default {};
-    Class<?>[] clazz() default {};
+    EventsFor[] value();
 }
