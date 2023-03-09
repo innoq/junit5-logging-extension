@@ -19,7 +19,7 @@ Add junit5-logging-extension as dependency within test scope to your project.
 <dependency>
   <groupId>com.innoq</groupId>
   <artifactId>junit5-logging-extension</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -27,13 +27,13 @@ Add junit5-logging-extension as dependency within test scope to your project.
 ### Gradle Groovy DSL
 
 ```
-testImplementation 'com.innoq:junit5-logging-extension:0.1.0'
+testImplementation 'com.innoq:junit5-logging-extension:0.2.0'
 ```
 
 ### Gradle Kotlin DSL
 
 ```
-testImplementation("com.innoq:junit5-logging-extension:0.1.0")
+testImplementation("com.innoq:junit5-logging-extension:0.2.0")
 ```
 
 Use the extension within your JUnit 5 tests:
