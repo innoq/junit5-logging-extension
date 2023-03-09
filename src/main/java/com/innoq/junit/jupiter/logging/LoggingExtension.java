@@ -36,12 +36,11 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
             .collect(Collectors.toList());
 
         if (configuredLoggers.isEmpty()) {
-            storeLogger(store, new CloseableLogger(LoggerFactory.getLogger(ROOT_LOGGER_NAME), appender));
+            storeLogger(store, CloseableLogger.from(LoggerFactory.getLogger(ROOT_LOGGER_NAME), org.slf4j.event.Level.INFO, appender));
         } else {
             configuredLoggers
                 .stream()
-                .map(LoggingExtension::loggerNameFrom)
-                .map(name -> new CloseableLogger(name, appender))
+                .map(eventsFor -> CloseableLogger.from(eventsFor, appender))
                 .forEach(logger -> storeLogger(store, logger));
         }
 
@@ -58,19 +57,6 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
         final Store store = getStore(extensionContext);
         final ListAppender<ILoggingEvent> appender = getAppender(store);
         return new LoggingEvents(appender);
-    }
-
-    private static String loggerNameFrom(EventsFor eventsFor) {
-        if (!Void.class.equals(eventsFor.value())) {
-            return eventsFor.value().getName();
-        }
-        if (!Void.class.equals(eventsFor.logger())) {
-            return eventsFor.logger().getName();
-        }
-        if (!eventsFor.name().trim().isEmpty()) {
-            return eventsFor.name();
-        }
-        return ROOT_LOGGER_NAME;
     }
 
     private static Store getStore(ExtensionContext context) {
@@ -110,22 +96,18 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
         private final Logger logger;
         private final Level previousLevel;
 
-        private CloseableLogger(String name, Appender<ILoggingEvent> appender) {
-            this(LoggerFactory.getLogger(name), appender);
-        }
-
-        private CloseableLogger(org.slf4j.Logger logger, Appender<ILoggingEvent> appender) {
-            this((Logger) logger, appender);
-        }
-
-        private CloseableLogger(Logger logger, Appender<ILoggingEvent> appender) {
+        private CloseableLogger(Logger logger, Level level, Appender<ILoggingEvent> appender) {
             this.appender = appender;
             this.logger = logger;
 
             this.previousLevel = this.logger.getLevel();
 
-            this.logger.setLevel(Level.TRACE);
+            this.logger.setLevel(level);
             this.logger.addAppender(appender);
+        }
+
+        public String getName() {
+            return "LOGGER_" + this.logger.getName();
         }
 
         @Override
@@ -134,8 +116,25 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
             this.logger.detachAppender(this.appender);
         }
 
-        public String getName() {
-            return "LOGGER_" + this.logger.getName();
+        public static CloseableLogger from(org.slf4j.Logger logger, org.slf4j.event.Level level, Appender<ILoggingEvent> appender) {
+            return new CloseableLogger((Logger) logger, Level.toLevel(level.toString()), appender);
+        }
+
+        public static CloseableLogger from(EventsFor eventsFor, Appender<ILoggingEvent> appender) {
+            return from(loggerFor(eventsFor), eventsFor.level(), appender);
+        }
+
+        private static org.slf4j.Logger loggerFor(EventsFor eventsFor) {
+            if (!Void.class.equals(eventsFor.value())) {
+                return LoggerFactory.getLogger(eventsFor.value());
+            }
+            if (!Void.class.equals(eventsFor.logger())) {
+                return LoggerFactory.getLogger(eventsFor.logger());
+            }
+            if (!eventsFor.name().trim().isEmpty()) {
+                return LoggerFactory.getLogger(eventsFor.name());
+            }
+            return LoggerFactory.getLogger(ROOT_LOGGER_NAME);
         }
     }
 }

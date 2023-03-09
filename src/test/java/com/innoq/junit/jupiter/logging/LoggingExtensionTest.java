@@ -30,7 +30,7 @@ class LoggingExtensionTest {
     }
 
     @Test
-    void events_shouldContainLogEventsForEveryLevel(LoggingEvents events) {
+    void events_shouldContainLogEventsForInfoWarnAndErrorLevelByDefault(LoggingEvents events) {
         LOG.trace("Trace message");
         LOG.debug("Debug message");
         LOG.info("Info message");
@@ -38,13 +38,11 @@ class LoggingExtensionTest {
         LOG.error("Error message");
 
         assertThat(events.all())
-                .extracting(ILoggingEvent::getMessage)
-                .containsExactly(
-                    "Trace message",
-                    "Debug message",
-                    "Info message",
-                    "Warn message",
-                    "Error message");
+            .extracting(ILoggingEvent::getMessage)
+            .containsExactly(
+                "Info message",
+                "Warn message",
+                "Error message");
     }
 
     @Test
@@ -53,10 +51,10 @@ class LoggingExtensionTest {
         LOG2.info("Log2 message");
 
         assertThat(events.all())
-                .extracting(ILoggingEvent::getMessage)
-                .containsExactly(
-                    "Log message",
-                    "Log2 message");
+            .extracting(ILoggingEvent::getMessage)
+            .containsExactly(
+                "Log message",
+                "Log2 message");
     }
 
     @RepeatedTest(10)
