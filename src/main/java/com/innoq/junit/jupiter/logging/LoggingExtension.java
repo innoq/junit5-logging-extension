@@ -4,11 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
@@ -70,6 +66,7 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Afte
             return loggingEvent -> true;
         }
 
-        return loggingEvent -> loggersToCapture.contains(loggingEvent.getLoggerName());
+        return loggingEvent -> loggersToCapture.stream()
+            .anyMatch(loggerName -> loggingEvent.getLoggerName().startsWith(loggerName));
     }
 }
