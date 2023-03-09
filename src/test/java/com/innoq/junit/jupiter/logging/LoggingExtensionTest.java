@@ -1,9 +1,13 @@
 package com.innoq.junit.jupiter.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,5 +57,28 @@ class LoggingExtensionTest {
                 .containsExactly(
                     "Log message",
                     "Log2 message");
+    }
+
+    @RepeatedTest(10)
+    void events_shouldNotThrowException_whenConcurrentLoggingOccurs(LoggingEvents events) throws InterruptedException {
+        AtomicBoolean stopConcurrentLogging = new AtomicBoolean(false);
+        CountDownLatch waitForLogsWritten = new CountDownLatch(1);
+
+        Runnable concurrentLogging = () -> {
+            while (!stopConcurrentLogging.get()) {
+                LOG.info("Logging");
+                waitForLogsWritten.countDown();
+            }
+        };
+        new Thread(concurrentLogging).start();
+
+        try {
+            waitForLogsWritten.await();
+
+            assertThat(events.all())
+                .isNotEmpty();
+        } finally {
+            stopConcurrentLogging.set(true);
+        }
     }
 }

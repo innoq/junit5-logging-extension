@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -36,8 +37,8 @@ public final class LoggingEvents {
     }
 
     private List<ILoggingEvent> matching(Predicate<ILoggingEvent> predicate) {
-        return appender.list.stream()
-                .filter(filter.and(predicate))
-                .collect(toList());
+        return new ArrayList<>(appender.list).stream()
+            .filter(filter.and(predicate))
+            .collect(toList());
     }
 }
