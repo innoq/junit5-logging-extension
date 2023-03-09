@@ -10,34 +10,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Logging
 class EventsFilteredByTest {
 
-    static final Logger LOG = LoggerFactory.getLogger(EventsFilteredByTest.class);
+    static final Logger EVENTS_FILTERED_BY_TEST = LoggerFactory.getLogger(EventsFilteredByTest.class);
     static final Logger LOG2 = LoggerFactory.getLogger("EventsFilteredByTest.Log2");
-    static final Logger LOG3 = LoggerFactory.getLogger("EventsFilteredByTest.Log3");
-    static final Logger LOG4 = LoggerFactory.getLogger(EventsFilteredBy.class);
+    static final Logger EVENTS_FILTERED_BY = LoggerFactory.getLogger(EventsFilteredBy.class);
 
     @Test
-    void events_shouldContainOnlyMatchingLogEvents_whenSingleFilterIsDefined(@EventsFilteredBy(@EventsFor(clazz = EventsFilteredByTest.class)) LoggingEvents events) {
-        LOG.info("Log message");
+    void events_shouldContainOnlyMatchingLogEvents_whenSingleFilterIsDefined(@EventsFilteredBy(@EventsFor(EventsFilteredBy.class)) LoggingEvents events) {
+        EVENTS_FILTERED_BY_TEST.info("EventsFilteredByTest message");
         LOG2.info("Log2 message");
-        LOG3.info("Log3 message");
-        LOG4.info("Log4 message");
+        EVENTS_FILTERED_BY.info("EventsFilteredBy message");
 
         assertThat(events.all())
             .extracting(ILoggingEvent::getMessage)
-            .containsExactly("Log message");
+            .containsExactly("EventsFilteredBy message");
     }
 
     @Test
-    void events_shouldContainOnlyMatchingLogEvents_whenMultipleFiltersAreDefined(@EventsFilteredBy({@EventsFor(clazz = EventsFilteredByTest.class), @EventsFor(clazz = EventsFilteredBy.class)}) LoggingEvents events) {
-        LOG.info("Log message");
+    void events_shouldContainOnlyMatchingLogEvents_whenMultipleFiltersAreDefined(@EventsFilteredBy({@EventsFor(EventsFilteredBy.class), @EventsFor(EventsFilteredByTest.class)}) LoggingEvents events) {
+        EVENTS_FILTERED_BY_TEST.info("EventsFilteredByTest message");
         LOG2.info("Log2 message");
-        LOG3.info("Log3 message");
-        LOG4.info("Log4 message");
+        EVENTS_FILTERED_BY.info("EventsFilteredBy message");
 
         assertThat(events.all())
             .extracting(ILoggingEvent::getMessage)
             .containsExactly(
-                "Log message",
-                "Log4 message");
+                "EventsFilteredByTest message",
+                "EventsFilteredBy message");
     }
 }

@@ -12,6 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Repeatable(EventsFilteredBy.class)
 public @interface EventsFor {
 
-    String[] value() default {};
-    Class<?>[] clazz() default {};
+    Class<?> value() default Void.class;
+    Class<?> logger() default Void.class;
+    String name() default "";
 }
