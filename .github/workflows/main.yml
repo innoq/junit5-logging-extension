@@ -8,7 +8,7 @@ jobs:
     name: Compile, test and package modules
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 8
         uses: actions/setup-java@v3
