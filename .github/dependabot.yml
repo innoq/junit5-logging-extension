@@ -6,11 +6,11 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-      # Ignore all logback updates because it is aligned to Spring Boot 2.7.x
+      # Ignore all logback updates because it is aligned to Spring Boot 3.2.x
       - dependency-name: "ch.qos.logback:logback-classic"
-      # Ignore all AssertJ updates because it is aligned to Spring Boot 2.7.x
+      # Ignore all AssertJ updates because it is aligned to Spring Boot 3.2.x
       - dependency-name: "org.assertj:assertj-core"
-      # Ignore all JUnit updates because it is aligned to Spring Boot 2.7.x
+      # Ignore all JUnit updates because it is aligned to Spring Boot 3.2.x
       - dependency-name: "org.junit:junit-bom"
   - package-ecosystem: "github-actions"
     directory: "/"
