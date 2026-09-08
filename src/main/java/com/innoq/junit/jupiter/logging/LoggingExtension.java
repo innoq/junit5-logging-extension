@@ -9,14 +9,12 @@ import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
@@ -33,7 +31,7 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
 
         final List<EventsFor> configuredLoggers = Arrays.stream(extensionContext.getRequiredTestMethod().getParameters())
             .flatMap(parameter -> findRepeatableAnnotations(parameter, EventsFor.class).stream())
-            .collect(Collectors.toList());
+            .toList();
 
         if (configuredLoggers.isEmpty()) {
             storeLogger(store, CloseableLogger.from(LoggerFactory.getLogger(ROOT_LOGGER_NAME), org.slf4j.event.Level.INFO, appender));
@@ -75,7 +73,7 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
         return store.get(APPENDER, CloseableAppender.class).appender;
     }
 
-    private static final class CloseableAppender implements CloseableResource {
+    private static final class CloseableAppender implements AutoCloseable {
 
         private final ListAppender<ILoggingEvent> appender;
 
@@ -90,7 +88,7 @@ public final class LoggingExtension implements BeforeTestExecutionCallback, Para
         }
     }
 
-    private static final class CloseableLogger implements CloseableResource {
+    private static final class CloseableLogger implements AutoCloseable {
 
         private final Appender<ILoggingEvent> appender;
         private final Logger logger;
